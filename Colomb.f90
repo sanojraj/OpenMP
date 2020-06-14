@@ -1,17 +1,11 @@
-program omp_par_do
+ program omp_par_do
  use omp_lib
- implicit none
- character(len=40)    :: filename           !Storing the file name
- character(len=20)    :: nam                !Collecting the file name within the file
- integer(8)           :: N
- real*8,dimension(1:700000)::rx,ry,rz,rx1,rx2,ry1,ry2,rz1,rz2,result1                !Number of coordinates within  the file
- !real*8,dimension(30000:30000)::coa1
- real(8), allocatable :: coa(:,:),coa1(:,:),coa2(:,:)         !Array containing xyz coordinates
- character(len=6), allocatable :: atom(:,:) !Array containing the atomic make up
- integer(8)          ::l, i,j,k,start,count1,count2,count3,count4,count5,count6,count7,count8,start1,start2,N1,     a          !Do loop parameters
+ implicit none  
+ real*8,dimension(1:700000)::rx,ry,rz,rx1,rx2,ry1,ry2,rz1,rz2,result1 !
+ integer(8) ::l, i,j,k,start,count1,count2,count3,count4,count5,count6,count7,count8,start1,start2,N1,a,N
  real*8::summ,summ1,sum1,potential,charge,q1,dist,vale
-   integer :: num_threads = 16
- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ integer :: num_threads = 16
+
  N1=76800
  charge = 130 !! interms of electron
  q1 = real(charge) / real(N1)
@@ -52,13 +46,9 @@ program omp_par_do
          !$omp do
          do i =1,N1
              do j = 1,N1
-                 !  summ = summ + (rx1(i)+rx2(j))
-                 dist = dsqrt ((rx1(i)-rx2(j))**2.0D0 + (ry1(i)-ry2(j))**2.0D0 + (rz1(i)-rz2(j))**2.0D0)
+                 dist = dsqrt((rx1(i)-rx2(j))**2.0D0 + (ry1(i)-ry2(j))**2.0D0 + (rz1(i)-rz2(j))**2.0D0)
                  potential = (((q1*1.6d0)**2)*9.0d0)/(dist*80.0D0)
                  summ = summ +potential*(1.44D0)*10.0D0
-                 ! potential = (((-23.0d0*2.3d0)*(1.78D0)))*((1.7d0/(dist))**6.0D0)
-                 ! potential = (((23.0d0*2.3d0)*(1.0d0/(3.14)**2.0)))/(dist**6.0D0)
-                 ! summ = summ +potential
              end do
          result1(i) = summ
          summ = 0.0
